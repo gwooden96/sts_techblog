@@ -1,5 +1,7 @@
 package com.newbieTechblog.service;
 
+import java.util.Optional;
+
 import org.springframework.stereotype.Service;
 
 import com.newbieTechblog.domain.Post;
@@ -17,6 +19,7 @@ public class PostService {
 	
 	private final PostRepository postRepository;
 	
+	//글 작성 메서드
 	public void write(PostCreate postCreate) {
 		
 		Post post = Post.builder()
@@ -26,6 +29,17 @@ public class PostService {
 		
 		postRepository.save(post);
 
+	}
+	
+	
+	//글 조회 메서드
+	public Post get(Long id) {
+		Post post = postRepository.findById(id)
+				.orElseThrow(() -> new IllegalArgumentException("존재하지 않는 글입니다."));
+		
+		return post;
+			
+		
 	}
 
 }

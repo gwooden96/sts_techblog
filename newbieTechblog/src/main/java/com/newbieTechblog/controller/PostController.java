@@ -1,9 +1,12 @@
 package com.newbieTechblog.controller;
 
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.newbieTechblog.domain.Post;
 import com.newbieTechblog.request.PostCreate;
 import com.newbieTechblog.service.PostService;
 
@@ -22,11 +25,27 @@ public class PostController {
 	private final PostService postService;
 
 	
+	//글 작성
 	@PostMapping("/posts")
 	public void post(@RequestBody @Valid PostCreate request) {
 		
 		postService.write(request);
 	
+	}
+	
+	
+	/**
+	 *  /posts -> 글 전체 조회(검색 + 페이징)
+	 *  /posts/{postId} -> 글 한개만 조회
+	 */
+	
+	
+	//글 조회
+	@GetMapping("/posts/{postId}")
+	public Post get(@PathVariable(name = "postId") Long id) {
+		Post post = postService.get(id);
+		
+		return post;
 	}
 
 }
