@@ -12,6 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import com.newbieTechblog.domain.Post;
 import com.newbieTechblog.repository.PostRepository;
 import com.newbieTechblog.request.PostCreate;
+import com.newbieTechblog.response.PostResponse;
 
 @SpringBootTest
 public class PostServiceTest {
@@ -52,7 +53,7 @@ public class PostServiceTest {
 	void test2() {
 		//given
 		Post requestPost = Post.builder()
-				.title("foo")
+				.title("123456789012345")
 				.content("bar")
 				.build();
 		
@@ -60,13 +61,13 @@ public class PostServiceTest {
 
 		
 		// when
-		Post post = postService.get(requestPost.getId());
+		PostResponse postResponse = postService.get(requestPost.getId());
 		
 		// then
-		assertNotNull(post);
+		assertNotNull(postResponse);
 		assertEquals(1L, postRepository.count());
-		assertEquals("foo", post.getTitle());
-		assertEquals("bar", post.getContent());
+		assertEquals("foo", postResponse.getTitle());
+		assertEquals("bar", postResponse.getContent());
 
 	}
 	

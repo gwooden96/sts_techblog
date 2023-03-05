@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.newbieTechblog.domain.Post;
 import com.newbieTechblog.request.PostCreate;
+import com.newbieTechblog.response.PostResponse;
 import com.newbieTechblog.service.PostService;
 
 import jakarta.validation.Valid;
@@ -28,7 +29,6 @@ public class PostController {
 	//글 작성
 	@PostMapping("/posts")
 	public void post(@RequestBody @Valid PostCreate request) {
-		
 		postService.write(request);
 	
 	}
@@ -42,10 +42,13 @@ public class PostController {
 	
 	//글 조회
 	@GetMapping("/posts/{postId}")
-	public Post get(@PathVariable(name = "postId") Long id) {
-		Post post = postService.get(id);
+	public PostResponse get(@PathVariable(name = "postId") Long id) {
+		// request 클래스
+		// response 클래스
 		
-		return post;
+		PostResponse postResponse = postService.get(id);
+		// 응답 클래스 분리 (서비스 정책에 맞는)
+		return postResponse;
 	}
 
 }

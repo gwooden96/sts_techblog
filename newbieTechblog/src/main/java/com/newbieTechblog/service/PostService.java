@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import com.newbieTechblog.domain.Post;
 import com.newbieTechblog.repository.PostRepository;
 import com.newbieTechblog.request.PostCreate;
+import com.newbieTechblog.response.PostResponse;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,11 +34,17 @@ public class PostService {
 	
 	
 	//글 조회 메서드
-	public Post get(Long id) {
+	public PostResponse get(Long id) {
 		Post post = postRepository.findById(id)
 				.orElseThrow(() -> new IllegalArgumentException("존재하지 않는 글입니다."));
 		
-		return post;
+		PostResponse postResponse = PostResponse.builder()
+				.id(post.getId())
+				.title(post.getTitle())
+				.content(post.getContent())
+				.build();
+		
+		return postResponse;
 			
 		
 	}
