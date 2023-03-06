@@ -1,7 +1,11 @@
 package com.newbieTechblog.service;
 
-import java.util.Optional;
+import java.util.List;
+import java.util.stream.Collectors;
 
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.newbieTechblog.domain.Post;
@@ -38,15 +42,27 @@ public class PostService {
 		Post post = postRepository.findById(id)
 				.orElseThrow(() -> new IllegalArgumentException("존재하지 않는 글입니다."));
 		
-		PostResponse postResponse = PostResponse.builder()
+		return PostResponse.builder()
 				.id(post.getId())
 				.title(post.getTitle())
 				.content(post.getContent())
 				.build();
 		
-		return postResponse;
-			
+	}
+	
+	
+	//글 여러개 조회 메서드
+	public List<PostResponse> getList(Pageable pageable) {
+		return postRepository.findAll(pageable).stream()
+				.map(post -> new PostResponse(post))
+				.collect(Collectors.toList());
 		
 	}
 
 }
+
+
+
+
+
+

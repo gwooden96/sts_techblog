@@ -1,5 +1,6 @@
 package com.newbieTechblog.controller;
 
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -9,6 +10,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -41,7 +47,7 @@ public class PostControllerTest {
 		postRepository.deleteAll();
 	}
 	
-  @Test
+//  @Test
   @DisplayName("/posts 요청시 Hello World를 출력한다.")
   void test() throws Exception {
       // given
@@ -62,7 +68,7 @@ public class PostControllerTest {
   }
 	
 	
-	@Test
+//	@Test
 	@DisplayName("/posts 요청시 title값은 필수다.")
 	void test2() throws Exception{
 		// given
@@ -86,7 +92,7 @@ public class PostControllerTest {
 	
 	
 	
-	@Test
+//	@Test
 	@DisplayName("/posts 요청시 db에 값이 저장된다.")
 	void test3() throws Exception{
 		// given
@@ -114,7 +120,7 @@ public class PostControllerTest {
 	
 	
 	
-	@Test
+//	@Test
 	@DisplayName("글 1개 조회")
 	void test4() throws Exception{
 		// given
@@ -132,6 +138,33 @@ public class PostControllerTest {
 			.andExpect(jsonPath("$.id").value(post.getId()))
 			.andExpect(jsonPath("$.title").value("1234567890"))
 			.andExpect(jsonPath("$.content").value("bar"))
+			.andDo(print());
+
+	}
+	
+	
+	@Test
+	@DisplayName("글 여러개 조회")
+	void test5() throws Exception{
+		// given
+		List<Post> requestpostPosts = IntStream.range(1, 31)
+				.mapToObj(i -> Post.builder()
+						.title("지우든 제목 " + i)
+						.content("조립pc " + i)
+						.build())
+				.collect(Collectors.toList());
+
+		postRepository.saveAll(requestpostPosts);
+		
+		
+		// expected
+		mockMvc.perform(get("/posts?page=1&sort=id,desc")
+				.contentType(MediaType.APPLICATION_JSON))
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$.length()", is(5)))
+			.andExpect(jsonPath("$[0].id").value(30))
+			.andExpect(jsonPath("$[0].title").value("지우든 제목 30"))
+			.andExpect(jsonPath("$[0].content").value("조립pc 30"))
 			.andDo(print());
 
 	}

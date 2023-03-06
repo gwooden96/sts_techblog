@@ -1,3 +1,26 @@
 #PORT
 server:
   port: 8085
+  
+
+
+#h2 DB
+spring:
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+      
+  datasource:
+    url: jdbc:h2:mem:techBlog
+    username: sa
+    password: 
+    driver-class-name: org.h2.Driver
+
+    
+#파라미터 시작값을 0부터가 아닌 1부터 시작하게 설정
+  data:
+    web:
+      pageable:
+        one-indexed-parameters: true
+        default-page-size: 5

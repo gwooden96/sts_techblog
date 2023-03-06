@@ -1,9 +1,14 @@
 package com.newbieTechblog.controller;
 
+import java.util.List;
+
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.newbieTechblog.domain.Post;
@@ -26,7 +31,7 @@ public class PostController {
 	private final PostService postService;
 
 	
-	//글 작성
+	//글 작성 api
 	@PostMapping("/posts")
 	public void post(@RequestBody @Valid PostCreate request) {
 		postService.write(request);
@@ -40,15 +45,18 @@ public class PostController {
 	 */
 	
 	
-	//글 조회
+	//글 조회(단건 조회) api
 	@GetMapping("/posts/{postId}")
-	public PostResponse get(@PathVariable(name = "postId") Long id) {
-		// request 클래스
-		// response 클래스
-		
-		PostResponse postResponse = postService.get(id);
-		// 응답 클래스 분리 (서비스 정책에 맞는)
-		return postResponse;
+	public PostResponse get(@PathVariable Long postId) {
+		return postService.get(postId);
+
+	}
+	
+	
+	//글 조회(여러개의 글 조회) api
+	@GetMapping("/posts")
+	public List<PostResponse> getList(Pageable pageable) {
+		return postService.getList(pageable);
 	}
 
 }
